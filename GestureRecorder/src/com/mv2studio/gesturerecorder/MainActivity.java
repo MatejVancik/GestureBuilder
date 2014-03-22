@@ -17,8 +17,14 @@ public class MainActivity extends Activity {
 
 	public static final File storeFile = new File(Environment.getExternalStorageDirectory(), "gestures");
 
-	public static String[][] gestureTasks = { { "cyklus", "LOOP_" }, { "podmienku", "IF_" }, { "deklaráciu premennej", "DEC_" }, { "komentár", "COM_" },
-			{ "vymazanie riadku", "ROW_" }, { "zobrazenie bloku", "BL_" } };
+	public static String[][] gestureTasks = { 
+		{ "cyklus", "LOOP_" }, 
+		{ "podmienku", "IF_" }, 
+		{ "deklaráciu premennej", "DEC_" }, 
+		{ "komentár", "COM_" },
+		{ "vymazanie riadku", "ROW_" },
+		{ "zobrazenie bloku", "BL_" } 
+	};
 
 	private boolean menuShowingType;
 	private int menuRes = R.menu.empty;
@@ -33,8 +39,6 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-
-		// init
 		super.onCreate(savedInstanceState);
 
 		// put progressbar to action bar 

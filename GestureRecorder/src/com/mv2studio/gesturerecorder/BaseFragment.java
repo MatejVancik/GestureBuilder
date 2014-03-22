@@ -8,6 +8,7 @@ import android.os.Bundle;
 public class BaseFragment extends Fragment {
 	protected Typeface tLight, tCond, tCondBold, tCondLight, tThin;
 	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Context c = getActivity();
@@ -18,4 +19,6 @@ public class BaseFragment extends Fragment {
 		tCondBold = Typeface.createFromAsset(c.getAssets(), "fonts/Roboto-BoldCondensed.ttf");
 		super.onCreate(savedInstanceState);
 	}
+	
+	
 }

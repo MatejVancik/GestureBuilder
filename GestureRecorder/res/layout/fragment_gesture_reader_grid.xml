@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <GridView
+        android:id="@+id/fragment_gesture_reader_grid_grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:verticalSpacing="10dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true" >
+
+        <ImageButton
+            android:id="@+id/fragment_gesture_reader_grid_minus"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="6dp"
+            android:background="@drawable/circle_blue_selector"
+            android:padding="6dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/minus" />
+
+        <ImageButton
+            android:id="@+id/fragment_gesture_reader_grid_plus"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:layout_margin="6dp"
+            android:background="@drawable/circle_blue_selector"
+            android:padding="6dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/plus" />
+    </RelativeLayout>
+
+</RelativeLayout>
