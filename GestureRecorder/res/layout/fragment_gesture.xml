@@ -128,6 +128,16 @@
             android:textColor="#fff"
             android:textSize="25sp" />
         
+         <Button 
+            android:id="@+id/fragmen_gesture_send"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_weight="0"
+            android:background="@drawable/button_selector_green"
+            android:textColor="#fff"
+            android:textSize="35sp"
+            android:text="ODOSLAŤ"/>
+        
         <Button 
             android:id="@+id/fragmen_gesture_finish"
             android:layout_width="match_parent"

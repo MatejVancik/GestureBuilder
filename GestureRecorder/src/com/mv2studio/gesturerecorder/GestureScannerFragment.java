@@ -1,11 +1,26 @@
 package com.mv2studio.gesturerecorder;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+
 import android.gesture.Gesture;
 import android.gesture.GestureLibraries;
 import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
 import android.gesture.GestureOverlayView.OnGestureListener;
 import android.gesture.GestureOverlayView.OnGesturePerformedListener;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.SparseArray;
@@ -20,6 +35,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class GestureScannerFragment extends BaseFragment implements OnGestureListener, OnGesturePerformedListener {
 
@@ -107,10 +123,16 @@ public class GestureScannerFragment extends BaseFragment implements OnGestureLis
 					refresh.startAnimation(rotate);
 					gestures.remove(currentItem);
 					break;
+					
+				case R.id.fragmen_gesture_send:
+					new SendData().execute();
+					break;
 				}
 				gesture = null;
 			}
 		};
+		
+		v.findViewById(R.id.fragmen_gesture_send).setOnClickListener(clickListener);
 		
 		next = (ImageButton) v.findViewById(R.id.fragment_gesture_next);
 		next.setOnClickListener(clickListener);
@@ -176,6 +198,54 @@ public class GestureScannerFragment extends BaseFragment implements OnGestureLis
 			
 		
 		return v;
+	}
+	
+	private class SendData extends AsyncTask<Void, Integer, Void>{
+		int progress = 0;
+		
+		@Override
+		protected Void doInBackground(Void... params) {
+			
+			
+			
+			for(int i = 0; i < items; i++) {
+				Gesture g = gestures.get(i);
+				if(g == null) continue;
+				
+				Bitmap bitmap = g.toBitmap(800, 800, 0, getResources().getColor(R.color.HoloRed));
+				ByteArrayOutputStream stream = new ByteArrayOutputStream();
+				bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+				String image_str = Base64.encodeBytes(stream.toByteArray());
+				
+				ArrayList<NameValuePair> pairs = new ArrayList<NameValuePair>();
+				pairs.add(new BasicNameValuePair("image", image_str));
+				pairs.add(new BasicNameValuePair("ID", MainActivity.gestureTasks[i][1]+gestureID));
+				
+				try {
+					HttpClient httpClient = new DefaultHttpClient();
+					HttpPost httpPost = new HttpPost("");
+					httpPost.setEntity(new UrlEncodedFormEntity(pairs));
+					httpClient.execute(httpPost);
+					publishProgress(++progress);
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				} catch (ClientProtocolException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+			}
+			
+			return null;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			Toast.makeText(getActivity(), "DONE "+progress+"/"+items, Toast.LENGTH_SHORT).show();
+			super.onProgressUpdate(values);
+		}
+		
 	}
 	
 	private void setGestureView(int step) {
