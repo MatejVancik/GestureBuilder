@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="app_name">Gesture Recorder</string>
+    
+    <string name="start">Štart</string>
+    <string name="browse_gestures">Prezerať gestá</string>
+    <string name="gesture_title">Nakresli gesto pre</string>
+
+</resources>
