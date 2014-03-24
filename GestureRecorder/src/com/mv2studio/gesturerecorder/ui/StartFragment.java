@@ -1,4 +1,8 @@
-package com.mv2studio.gesturerecorder;
+package com.mv2studio.gesturerecorder.ui;
+
+import com.mv2studio.gesturerecorder.R;
+import com.mv2studio.gesturerecorder.R.id;
+import com.mv2studio.gesturerecorder.R.layout;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,6 +26,7 @@ public class StartFragment extends BaseFragment {
 				case R.id.fragment_start_start:
 					activity.replaceFragment(new GestureScannerFragment(), true);
 					break;
+					
 				case R.id.fragment_start_browse:
 					GestureReaderFragment fragment = new GestureReaderFragment();
 					Bundle args = new Bundle();
@@ -33,13 +38,15 @@ public class StartFragment extends BaseFragment {
 			}
 		};
 		
-		Button start = (Button)v.findViewById(R.id.fragment_start_start);
+		Button start = (Button) v.findViewById(R.id.fragment_start_start);
 		start.setOnClickListener(clickListener);
 		start.setTypeface(tThin);
 		
 		Button browse = (Button) v.findViewById(R.id.fragment_start_browse);
 		browse.setOnClickListener(clickListener);
 		browse.setTypeface(tCondBold);
+
+		if(MainActivity.WORLD_EDITION) browse.setVisibility(View.GONE);
 		
 		return v;
 	}

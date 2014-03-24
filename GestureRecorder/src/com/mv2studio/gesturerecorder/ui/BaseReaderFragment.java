@@ -1,6 +1,9 @@
-package com.mv2studio.gesturerecorder;
+package com.mv2studio.gesturerecorder.ui;
 
 import java.util.ArrayList;
+
+import com.mv2studio.gesturerecorder.R;
+import com.mv2studio.gesturerecorder.R.color;
 
 import android.gesture.Gesture;
 import android.gesture.GestureLibraries;
@@ -76,12 +79,12 @@ public class BaseReaderFragment extends BaseFragment {
 						final NamedGesture namedGesture = new NamedGesture();
 						namedGesture.gesture = gesture;
 						namedGesture.name = name;
-
+						
 						// need only gestures matching ID!
 						if ((showType == SHOW_GESTURES_BY_ID && name.endsWith(gesturesID))
 								|| (showType == SHOW_GESTURES_BY_TYPE && name.startsWith(gesturesID))) {
 
-							final Bitmap bitmap = gesture.toBitmap(800, 800, 0, getActivity().getResources().getColor(R.color.HoloRed));
+							final Bitmap bitmap = gesture.toBitmap(256, 256, 0, getActivity().getResources().getColor(R.color.HoloRed));
 							namedGesture.pic = new BitmapDrawable(bitmap);
 							data.add(namedGesture);
 							continue;

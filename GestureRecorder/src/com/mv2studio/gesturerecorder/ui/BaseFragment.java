@@ -1,4 +1,4 @@
-package com.mv2studio.gesturerecorder;
+package com.mv2studio.gesturerecorder.ui;
 
 import android.app.Fragment;
 import android.content.Context;

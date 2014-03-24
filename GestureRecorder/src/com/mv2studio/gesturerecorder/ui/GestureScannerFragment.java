@@ -1,26 +1,14 @@
-package com.mv2studio.gesturerecorder;
+package com.mv2studio.gesturerecorder.ui;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-
+import android.content.Intent;
 import android.gesture.Gesture;
 import android.gesture.GestureLibraries;
 import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
 import android.gesture.GestureOverlayView.OnGestureListener;
 import android.gesture.GestureOverlayView.OnGesturePerformedListener;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.SparseArray;
@@ -35,7 +23,9 @@ import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.mv2studio.gesturerecorder.PictureUploadService;
+import com.mv2studio.gesturerecorder.R;
 
 public class GestureScannerFragment extends BaseFragment implements OnGestureListener, OnGesturePerformedListener {
 
@@ -110,7 +100,17 @@ public class GestureScannerFragment extends BaseFragment implements OnGestureLis
 					
 					// FINISH!
 					if(currentItem == items-1) {
-						thxLayout.startAnimation(anim_in);
+						
+						if(MainActivity.WORLD_EDITION) {
+							sendAnswers();
+							Bundle b = new Bundle();
+							b.putString(SurveyFragment.ID_TAG, gestureID);
+							SurveyFragment f = new SurveyFragment();
+							f.setArguments(b);
+							((MainActivity)getActivity()).replaceFragment(f, true);
+						} else {
+							thxLayout.startAnimation(anim_in);
+						}
 					}
 					
 					setGestureView(1);
@@ -124,15 +124,21 @@ public class GestureScannerFragment extends BaseFragment implements OnGestureLis
 					gestures.remove(currentItem);
 					break;
 					
-				case R.id.fragmen_gesture_send:
-					new SendData().execute();
+				case R.id.fragmen_gesture_finish:
+					sendAnswers();
+					
+					
+					
+					getFragmentManager().popBackStack();
+					
+					
 					break;
 				}
 				gesture = null;
 			}
 		};
 		
-		v.findViewById(R.id.fragmen_gesture_send).setOnClickListener(clickListener);
+//		v.findViewById(R.id.fragmen_gesture_send).setOnClickListener(clickListener);
 		
 		next = (ImageButton) v.findViewById(R.id.fragment_gesture_next);
 		next.setOnClickListener(clickListener);
@@ -167,13 +173,14 @@ public class GestureScannerFragment extends BaseFragment implements OnGestureLis
 		
 		finish = (Button) v.findViewById(R.id.fragmen_gesture_finish);
 		finish.setTypeface(tCondBold);
-		finish.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				getFragmentManager().popBackStack();
-			}
-		});
+		finish.setOnClickListener(clickListener);
+//		finish.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				getFragmentManager().popBackStack();
+//			}
+//		});
 		
 		if(currentItem == items - 1) {
 			thxLayout.startAnimation(anim_in);
@@ -200,52 +207,16 @@ public class GestureScannerFragment extends BaseFragment implements OnGestureLis
 		return v;
 	}
 	
-	private class SendData extends AsyncTask<Void, Integer, Void>{
-		int progress = 0;
-		
-		@Override
-		protected Void doInBackground(Void... params) {
-			
-			
-			
-			for(int i = 0; i < items; i++) {
-				Gesture g = gestures.get(i);
-				if(g == null) continue;
-				
-				Bitmap bitmap = g.toBitmap(800, 800, 0, getResources().getColor(R.color.HoloRed));
-				ByteArrayOutputStream stream = new ByteArrayOutputStream();
-				bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-				String image_str = Base64.encodeBytes(stream.toByteArray());
-				
-				ArrayList<NameValuePair> pairs = new ArrayList<NameValuePair>();
-				pairs.add(new BasicNameValuePair("image", image_str));
-				pairs.add(new BasicNameValuePair("ID", MainActivity.gestureTasks[i][1]+gestureID));
-				
-				try {
-					HttpClient httpClient = new DefaultHttpClient();
-					HttpPost httpPost = new HttpPost("");
-					httpPost.setEntity(new UrlEncodedFormEntity(pairs));
-					httpClient.execute(httpPost);
-					publishProgress(++progress);
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
-				} catch (ClientProtocolException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				
-			}
-			
-			return null;
+	private void sendAnswers() {
+		ArrayList<Gesture> gestureList = new ArrayList<Gesture>();
+		for(int i = 0; i < items; i++) {
+			gestureList.add(gestures.get(i));
 		}
 		
-		@Override
-		protected void onProgressUpdate(Integer... values) {
-			Toast.makeText(getActivity(), "DONE "+progress+"/"+items, Toast.LENGTH_SHORT).show();
-			super.onProgressUpdate(values);
-		}
-		
+		Intent intent = new Intent(getActivity(), PictureUploadService.class);
+		intent.putParcelableArrayListExtra(PictureUploadService.GESTURES_TAG, gestureList);
+		intent.putExtra(PictureUploadService.ID_TAG, gestureID);
+		getActivity().startService(intent);
 	}
 	
 	private void setGestureView(int step) {
@@ -285,14 +256,6 @@ public class GestureScannerFragment extends BaseFragment implements OnGestureLis
 		store.save();
 		System.out.println("gesture saved");
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 	
 
 	@Override

@@ -88,18 +88,7 @@
             android:src="@drawable/right" />
     </RelativeLayout>
 
-    <TextView 
-        android:id="@+id/fragment_gesture_thanks"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/HoloGreen"
-        android:textColor="#fff"
-        android:textSize="60sp"
-        android:text="Ďakujeme"
-        android:gravity="center"
-        android:visibility="invisible"/>
-    
-        <LinearLayout
+    <LinearLayout
         android:id="@+id/fragment_gesture_thanks_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -114,39 +103,29 @@
             android:layout_weight="2"
             android:gravity="center_horizontal|bottom"
             android:text="Ďakujeme"
-            android:textColor="#fff" 
+            android:textColor="#fff"
             android:textSize="45sp" />
 
         <TextView
             android:id="@+id/fragment_gesture_your_id"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_horizontal"
             android:layout_marginTop="30dp"
             android:layout_weight="1"
+            android:gravity="center_horizontal"
             android:text="Vaše id: \n 123456789"
             android:textColor="#fff"
             android:textSize="25sp" />
-        
-         <Button 
-            android:id="@+id/fragmen_gesture_send"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_weight="0"
-            android:background="@drawable/button_selector_green"
-            android:textColor="#fff"
-            android:textSize="35sp"
-            android:text="ODOSLAŤ"/>
-        
-        <Button 
+
+        <Button
             android:id="@+id/fragmen_gesture_finish"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_weight="0"
             android:background="@drawable/button_selector_green"
+            android:text="Dokončiť"
             android:textColor="#fff"
-            android:textSize="35sp"
-            android:text="Dokončiť"/>
+            android:textSize="35sp" />
     </LinearLayout>
 
 </RelativeLayout>

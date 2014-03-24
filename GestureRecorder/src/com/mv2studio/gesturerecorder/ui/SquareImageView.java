@@ -1,4 +1,4 @@
-package com.mv2studio.gesturerecorder;
+package com.mv2studio.gesturerecorder.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;

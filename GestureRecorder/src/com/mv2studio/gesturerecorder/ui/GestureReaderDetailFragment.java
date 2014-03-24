@@ -1,8 +1,13 @@
-package com.mv2studio.gesturerecorder;
+package com.mv2studio.gesturerecorder.ui;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.mv2studio.gesturerecorder.R;
+import com.mv2studio.gesturerecorder.R.drawable;
+import com.mv2studio.gesturerecorder.R.id;
+import com.mv2studio.gesturerecorder.R.layout;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;

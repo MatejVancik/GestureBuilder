@@ -110,22 +110,22 @@
             android:id="@+id/fragment_gesture_your_id"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_horizontal"
             android:layout_marginTop="30dp"
             android:layout_weight="1"
+            android:gravity="center_horizontal"
             android:text="Vaše id: \n 123456789"
             android:textColor="#fff"
             android:textSize="40sp" />
-        
-        <Button 
+
+        <Button
             android:id="@+id/fragmen_gesture_finish"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_weight="0"
             android:background="@drawable/button_selector_green"
+            android:text="Dokončiť"
             android:textColor="#fff"
-            android:textSize="40sp"
-            android:text="Dokončiť"/>
+            android:textSize="40sp" />
     </LinearLayout>
 
 </RelativeLayout>

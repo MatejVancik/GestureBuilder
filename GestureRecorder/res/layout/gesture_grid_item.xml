@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.mv2studio.gesturerecorder.SquareImageView
+    <com.mv2studio.gesturerecorder.ui.SquareImageView
         android:id="@+id/gesture_grid_item_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

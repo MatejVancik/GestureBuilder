@@ -1,10 +1,18 @@
-package com.mv2studio.gesturerecorder;
+package com.mv2studio.gesturerecorder.ui;
 
 import java.io.File;
+
+import com.mv2studio.gesturerecorder.Prefs;
+import com.mv2studio.gesturerecorder.R;
+import com.mv2studio.gesturerecorder.R.drawable;
+import com.mv2studio.gesturerecorder.R.id;
+import com.mv2studio.gesturerecorder.R.layout;
+import com.mv2studio.gesturerecorder.R.menu;
 
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.TaskStackBuilder;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
@@ -30,6 +38,8 @@ public class MainActivity extends Activity {
 	private int menuRes = R.menu.empty;
 	private boolean firstLoad = true;
 	private String FIRST_LOAD_TAG = "LOAD";
+	
+	public static boolean WORLD_EDITION = true;
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
@@ -50,10 +60,12 @@ public class MainActivity extends Activity {
 		if (savedInstanceState != null) {
 			firstLoad = savedInstanceState.getBoolean(FIRST_LOAD_TAG);
 		}
+		
 
 		// set fragment and it's arguments. if it's first time activity loads
 		// put fragment, otherwise let system recreate previous fragment
 		if (firstLoad)
+//			replaceFragment(new SurveyFragment(), false);
 			replaceFragment(new StartFragment(), false);
 		
 		

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ListView
+        android:id="@+id/fragment_survey_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/fragment_survey_done"
+        android:layout_below="@+id/fragment_survey_title"
+        android:clipToPadding="false"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="15dp"
+        android:paddingTop="5dp"
+        android:scrollbars="none" />
+
+    <Button
+        android:id="@+id/fragment_survey_done"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/button_selector_green"
+        android:text="Odoslať"
+        android:textColor="#fff" />
+
+    <TextView
+        android:id="@+id/fragment_survey_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Prosím odpovedajte na nasledujúce otázky"
+        android:textColor="@color/HoloBlue"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/fragment_survey_thanks"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="@color/HoloGreen"
+        android:text="Ďakujeme"
+        android:textColor="#fff"
+        android:textSize="80sp"
+        android:visibility="invisible" />
+
+</RelativeLayout>
