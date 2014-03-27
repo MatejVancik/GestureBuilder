@@ -59,11 +59,14 @@ public class SurveyFragment extends BaseFragment {
 			ArrayList<SurveyQuestion> q = (ArrayList<SurveyQuestion>) savedInstanceState.getSerializable(RETAIN_TAG);
 			if(q != null) questions = q;
 		} else {
+			questions.add(new SurveyQuestion("V ktorom ste ročníku", null, 1, "1. Bc.", "2. Bc.", "3. Bc.", "1. Ing.", "2. Ing", "PhD.", "Nie som študent"));
 			questions.add(new SurveyQuestion("Vaše skúsenosti s programovaním", null, 1, "Začiatočník", "Mierne pokročilý", "Pokročilý"));
 			questions.add(new SurveyQuestion("Preferovaný jazyk", "Vyberte, prosím, jazyk, v ktorom máte najviac skúsenosti a vaše znalosti práce v ňom odpovedajú úrovni z predošlej otázky.",
 					2, "Java", "PHP", "C/C++", "Python", "Ruby", "JavaScript", "Iné"));
 			questions.add(new SurveyQuestion("Máte tablet?", null, 1, "Áno", "Nie"));
-			questions.add(new SurveyQuestion("Máte mobilný internet?", null, 1, "Áno", "Nie"));
+			questions.add(new SurveyQuestion("Využívate pravidelne mobilný internet?", null, 1, "Áno", "Nie"));
+			questions.add(new SurveyQuestion("Použili ste niekedy dotykové zariadenie na programovanie?", null, 1, "Áno", "Nie"));
+			questions.add(new SurveyQuestion("Ak áno,  aké editory či vývojové prostredia ste použili?", null, 0));
 			questions.add(new SurveyQuestion("Viete si predstaviť programovanie na dotykovom zariadení?", null, 1, "Áno", "Nie"));
 			questions.add(new SurveyQuestion("Na aké činnosti súvisiace s programovaním by sa dalo použiť dotykové zariadenie?",
 					"V prípade, že na predchádzajúcu otázku ste odpovedali kladne, skúste bližšie opísať vašu predstavu.", 0));
@@ -161,7 +164,7 @@ public class SurveyFragment extends BaseFragment {
 		
 		doneButton.setEnabled(false);
 		doneButton.setBackgroundResource(R.drawable.button_selector_gray);
-		
+		((MainActivity)getActivity()).setMenu(MainActivity.MENU_CLEAR);
 		return v;
 	}
 	

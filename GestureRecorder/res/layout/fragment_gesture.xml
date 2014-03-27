@@ -9,12 +9,22 @@
         android:layout_height="match_parent"
         android:fadeEnabled="false"
         android:gestureColor="@color/HoloRed"
-        android:gestureStrokeType="multiple" />
+        android:gestureStrokeType="multiple"
+        android:visibility="invisible"
+		 />
+    
+    <com.mv2studio.gesturerecorder.ui.GestureView
+        android:id="@+id/fragment_gesture_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+		 />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:clickable="true"
+        android:paddingRight="48dp"
+        android:clipToPadding="false"
         android:orientation="vertical" >
 
         <TextView
@@ -37,7 +47,7 @@
     </LinearLayout>
 
     <ImageButton
-        android:id="@+id/fragment_gesture_refresh"
+        android:id="@+id/fragment_gesture_add"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_alignParentRight="true"
@@ -46,14 +56,22 @@
         android:background="@drawable/circle_green_selector"
         android:padding="6dp"
         android:scaleType="centerInside"
-        android:src="@drawable/refresh" />
+        android:src="@drawable/plus"
+        android:visibility="gone" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/gray_total"
+        android:layout_above="@+id/fragment_gesture_buttons_layout" />
 
     <RelativeLayout
         android:id="@+id/fragment_gesture_buttons_layout"
         android:layout_width="match_parent"
-        android:layout_height="53dp"
+        android:layout_height="58dp"
+        android:paddingTop="5dp"
         android:layout_alignParentBottom="true"
-        android:layout_margin="5dp"
+        android:background="@color/gray_light"
         android:clickable="true"
         android:paddingBottom="5dp" >
 
@@ -94,7 +112,7 @@
         android:layout_height="match_parent"
         android:background="@color/HoloGreen"
         android:orientation="vertical"
-        android:visibility="invisible" >
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/fragment_gesture_thanks"

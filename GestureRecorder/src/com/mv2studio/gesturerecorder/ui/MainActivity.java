@@ -2,58 +2,87 @@ package com.mv2studio.gesturerecorder.ui;
 
 import java.io.File;
 
-import com.mv2studio.gesturerecorder.Prefs;
-import com.mv2studio.gesturerecorder.R;
-import com.mv2studio.gesturerecorder.R.drawable;
-import com.mv2studio.gesturerecorder.R.id;
-import com.mv2studio.gesturerecorder.R.layout;
-import com.mv2studio.gesturerecorder.R.menu;
-
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.TaskStackBuilder;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
+
+import com.mv2studio.gesturerecorder.R;
+
 
 public class MainActivity extends Activity {
 
 	public static final File storeFile = new File(Environment.getExternalStorageDirectory(), "gestures");
 
 	public static String[][] gestureTasks = { 
-		{ "cyklus", "LOOP_" }, 
+		{ "cyklus", "LOOP_" }, // dat vsetky 3 osobytne 
 		{ "podmienku", "IF_" }, 
 		{ "deklaráciu premennej", "DEC_" }, 
 		{ "komentár", "COM_" },
 		{ "vymazanie riadku", "ROW_" },
-		{ "zobrazenie bloku", "BL_" } 
+		{ "zobrazenie bloku", "BL_" } // blbosť
+		// + metoda, trieda
 	};
 
-	private boolean menuShowingType;
+	private ImageButton refreshButton, orderButton;
+	private ProgressBar progBar;
+	
+	private boolean menuOrderType;
 	private int menuRes = R.menu.empty;
 	private boolean firstLoad = true;
 	private String FIRST_LOAD_TAG = "LOAD";
 	
-	public static boolean WORLD_EDITION = true;
+	public static boolean WORLD_EDITION = false;
 
+	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putBoolean(FIRST_LOAD_TAG, false);
 	}
 
+	private void onCreateActionBar() {
+		requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+		ActionBar bar = getActionBar();
+		bar.setCustomView(R.layout.action_bar_layout);
+		bar.setDisplayShowCustomEnabled(true);
+		View barView = bar.getCustomView();
+		
+		progBar = (ProgressBar) barView.findViewById(R.id.progress_bar);
+		refreshButton = (ImageButton) barView.findViewById(R.id.refresh);
+		orderButton = (ImageButton) barView.findViewById(R.id.order);
+		
+	}
+	
+	public void setOnRefreshListener(OnClickListener listener) {
+		refreshButton.setOnClickListener(listener);
+		Log.e("", "id: "+refreshButton);
+	}
+	
+	public void setOnOrderChangeListener(OnClickListener listener) {
+		orderButton.setOnClickListener(listener);
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		
+		
 		// put progressbar to action bar 
 		// requestWindowFeature MUST BE CALLED BEFORE SETTING CONTENTVIEW!
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		onCreateActionBar();
 		setContentView(R.layout.activity_main);
 		
 		// get saved variables from previous activity instance
@@ -69,7 +98,7 @@ public class MainActivity extends Activity {
 			replaceFragment(new StartFragment(), false);
 		
 		
-		menuShowingType = true;
+		menuOrderType = true;
 	}
 
 	private void setAdminFrag(int type) {
@@ -89,12 +118,45 @@ public class MainActivity extends Activity {
 	}
 
 	public void showProgress(boolean toShow) {
-		setProgressBarIndeterminateVisibility(toShow);
+		progBar.setVisibility(toShow ? View.VISIBLE : View.GONE);
 	}
 
-	public void showMenu(boolean toShow) {
-		menuRes = toShow ? R.menu.menu : R.menu.empty;
-		invalidateOptionsMenu();
+	
+	public static final int MENU_CLEAR = 0, MENU_GESTURE = 1, MENU_BROWSER = 2;
+	
+	public void setMenu(int type) {
+		refreshButton.setVisibility(View.GONE);
+		orderButton.setVisibility(View.GONE);
+		
+		switch(type) {
+			case MENU_GESTURE:
+				refreshButton.setVisibility(View.VISIBLE);
+				break;
+			case MENU_BROWSER:
+				orderButton.setVisibility(View.VISIBLE);
+				if (menuOrderType) {
+					orderButton.setImageResource(R.drawable.order_id);
+				} else {
+					orderButton.setImageResource(R.drawable.order_type);
+				}
+
+				orderButton.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View item) {
+						if (menuOrderType) {
+							getFragmentManager().popBackStack();
+							setAdminFrag(GestureReaderFragment.SHOW_IDS);
+						} else {
+							getFragmentManager().popBackStack();
+							setAdminFrag(GestureReaderFragment.SHOW_TYPE);
+						}
+						menuOrderType = !menuOrderType;
+					}
+				});
+				break;
+		}
+		
 	}
 
 	@Override
@@ -104,30 +166,7 @@ public class MainActivity extends Activity {
 			return super.onCreateOptionsMenu(menu);
 
 		MenuItem menuButton = menu.findItem(R.id.menu_gesture_reader_types);
-		if (menuShowingType) {
-			menuButton.setTitle("podľa id");
-			menuButton.setIcon(R.drawable.order_id);
-		} else {
-			menuButton.setTitle("podľa typu");
-			menuButton.setIcon(R.drawable.order_type);
-		}
-
-		menuButton.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-
-			@Override
-			public boolean onMenuItemClick(MenuItem item) {
-				if (menuShowingType) {
-					getFragmentManager().popBackStack();
-					setAdminFrag(GestureReaderFragment.SHOW_IDS);
-				} else {
-					getFragmentManager().popBackStack();
-					setAdminFrag(GestureReaderFragment.SHOW_TYPE);
-				}
-				menuShowingType = !menuShowingType;
-				invalidateOptionsMenu();
-				return false;
-			}
-		});
+		
 
 		return super.onCreateOptionsMenu(menu);
 	}

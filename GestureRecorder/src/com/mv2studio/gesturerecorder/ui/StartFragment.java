@@ -47,14 +47,8 @@ public class StartFragment extends BaseFragment {
 		browse.setTypeface(tCondBold);
 
 		if(MainActivity.WORLD_EDITION) browse.setVisibility(View.GONE);
-		
+		((MainActivity)getActivity()).setMenu(MainActivity.MENU_CLEAR);
 		return v;
-	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
-		((MainActivity)getActivity()).showMenu(false);
 	}
 	
 }

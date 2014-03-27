@@ -2,9 +2,6 @@ package com.mv2studio.gesturerecorder.ui;
 
 import java.util.ArrayList;
 
-import com.mv2studio.gesturerecorder.R;
-import com.mv2studio.gesturerecorder.R.color;
-
 import android.gesture.Gesture;
 import android.gesture.GestureLibraries;
 import android.gesture.GestureLibrary;
@@ -15,6 +12,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+
+import com.mv2studio.gesturerecorder.R;
 
 public class BaseReaderFragment extends BaseFragment {
 
@@ -48,13 +47,8 @@ public class BaseReaderFragment extends BaseFragment {
 		
 		// get gesture store
 		store = GestureLibraries.fromFile(MainActivity.storeFile);
+		((MainActivity)getActivity()).setMenu(MainActivity.MENU_BROWSER);
 	}	
-	
-	public void onResume() {
-		super.onResume();
-		activity.showMenu(showType == SHOW_TYPE || showType == SHOW_IDS);
-	}
-	
 	
 	protected static class NamedGesture {
 		String name;

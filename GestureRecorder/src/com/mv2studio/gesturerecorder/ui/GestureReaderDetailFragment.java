@@ -74,6 +74,8 @@ public class GestureReaderDetailFragment extends BaseReaderFragment {
 		plusButton = (ImageButton) v.findViewById(R.id.fragment_gesture_reader_grid_plus);
 		plusButton.setOnClickListener(clickListener);
 		
+		
+		
 		// load data in background
 		new LoadDataTask().execute();
 		
