@@ -1,10 +1,12 @@
 package com.mv2studio.gesturerecorder.ui;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Point;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.MotionEvent;
@@ -12,41 +14,45 @@ import android.view.View;
 
 public class GestureView extends View {
 
-	Context context;
-	private static final String TAG = "DrawView";
-	private static final int SIZE = 60;
-
-	private SparseArray<Path> mActivePointers;
+	private SparseArray<Path> gesturePaths;
+	private long lastUsed;
+	private static long TIME_DIFF = 1000;
+	private Point p;
+	private OnGestureDoneListener gestureDoneListener;
+	
+	
 	private Paint paint;
 	private int[] colors = { Color.BLUE, Color.GREEN, Color.MAGENTA, Color.BLACK, Color.CYAN, Color.GRAY, Color.RED, Color.DKGRAY, Color.LTGRAY, Color.YELLOW };
 
 	public GestureView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		this.context = context;
 		setFocusable(true);
 		setFocusableInTouchMode(true);
 
-		mActivePointers = new SparseArray<Path>();
+		gesturePaths = new SparseArray<Path>();
 		paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		// set painter color to a color you like
 		paint.setColor(Color.BLUE);
 		paint.setAntiAlias(true);
 	    paint.setStrokeWidth(6f);
+	    
 	    paint.setStyle(Paint.Style.STROKE);
 	    paint.setStrokeJoin(Paint.Join.ROUND);
 
 	}
+	
+	public void setGestureTimeout(long timeInMillis) {
+		TIME_DIFF = timeInMillis;
+	}
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-//		super.onDraw(canvas);
 		// draw all pointers
-		for (int size = mActivePointers.size(), i = 0; i < size; i++) {
-			Path point = mActivePointers.valueAt(i);
-			if (point != null)
+		for (int size = gesturePaths.size(), i = 0; i < size; i++) {
+			Path path = gesturePaths.valueAt(i);
+			if (path != null) {
 				paint.setColor(colors[i % 9]);
-			canvas.drawPath(point, paint);
-//			canvas.drawLine(point.prevX, point.prevY, point.x, point.y, mPaint);
+			}
+			canvas.drawPath(path, paint);
 		}
 	}
 
@@ -70,14 +76,20 @@ public class GestureView extends View {
 			float y = event.getY(pointerIndex);
 			
 			Path p = new Path();
+			if(TIME_DIFF > (System.currentTimeMillis() - lastUsed)) {
+				p = gesturePaths.get(pointerId);
+			} else if ((TIME_DIFF < (System.currentTimeMillis() - lastUsed)) && pointerId == 0) gesturePaths.clear();
+			
+			if(p == null) p = new Path();
 			p.moveTo(x, y);
 			
-			mActivePointers.put(pointerId, p);
+			gesturePaths.put(pointerId, p);
+			paint.setColor(Color.LTGRAY);
 			break;
 		}
 		case MotionEvent.ACTION_MOVE: { // a pointer was moved
 			for (int size = event.getPointerCount(), i = 0; i < size; i++) {
-				Path point = mActivePointers.get(event.getPointerId(i));
+				Path point = gesturePaths.get(event.getPointerId(i));
 				
 				if (point != null) {
 					float x = event.getX(i);
@@ -88,16 +100,63 @@ public class GestureView extends View {
 			break;
 		}
 		case MotionEvent.ACTION_UP:
+			lastUsed = System.currentTimeMillis();
+			if(gestureDoneListener != null)
+				gestureDoneListener.onDone();
 		case MotionEvent.ACTION_POINTER_UP:
-		case MotionEvent.ACTION_CANCEL: {
-//			mActivePointers.remove(pointerId);
-//			break;
-		}
+			try {
+				Path point = gesturePaths.get(pointerId);
+				
+				if (point != null) {
+					point.addCircle(event.getX(pointerIndex), event.getY(pointerIndex), 5, Path.Direction.CW);
+				}
+			} catch (IllegalArgumentException ex ) {ex.printStackTrace();}
+			
+		case MotionEvent.ACTION_CANCEL: 
+			break;
 		}
 		invalidate();
 
 		return true;
 	}
 	
-
+	public Gesture getGesture() {
+		Gesture g = new Gesture();
+		Bitmap b = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+		Canvas c = new Canvas(b);
+		draw(c);
+		
+		g.bitmap = Bitmap.createScaledBitmap(b, getWidth()/2, getHeight()/2, true);
+		g.paths = gesturePaths.clone();
+		return g;
+	}
+	
+	public void refreshGesture() {
+		gesturePaths.clear();
+		invalidate();
+	}
+	
+	public void setGesture(Gesture gesture) {
+		gesturePaths.clear();
+		if(gesture == null) {
+			invalidate(); return;
+		}
+		gesturePaths = gesture.paths;
+		invalidate();
+	}
+	
+	public void setOnGestureDoneListener(OnGestureDoneListener listener) {
+		gestureDoneListener = listener;
+	}
+	
+	public static class Gesture {
+		Bitmap bitmap;
+		SparseArray<Path> paths;
+		String name;
+		int rating = 0;
+	}
+	
+	public interface OnGestureDoneListener{
+		public void onDone();
+	}
 }

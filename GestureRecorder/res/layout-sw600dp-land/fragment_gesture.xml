@@ -9,45 +9,10 @@
         android:layout_height="match_parent"
         android:background="#fff" />
 
-    <LinearLayout
-        android:id="@+id/fragment_gesture_top_layout"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/gray_light"
-        android:clickable="true"
-        android:clipToPadding="false"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/fragment_gesture_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_weight="0"
-            android:gravity="center"
-            android:text="@string/gesture_title"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/fragment_gesture_title_type"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="22sp" />
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_below="@+id/fragment_gesture_top_layout"
-        android:background="@color/gray_total" />
-
     <TextView
         android:id="@+id/fragment_gesture_html_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/fragment_gesture_top_layout"
         android:layout_marginLeft="5dp"
         android:clickable="false"
         android:text="@string/code_sample"
@@ -66,7 +31,6 @@
         android:id="@+id/fragment_gesture_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/fragment_gesture_top_layout"
         android:layout_alignParentRight="true"
         android:layout_margin="5dp"
         android:layout_marginLeft="5dp"
@@ -83,7 +47,7 @@
     <RelativeLayout
         android:id="@+id/fragment_gesture_buttons_layout"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="100dp"
         android:layout_alignParentBottom="true"
         android:background="@color/gray_light"
         android:clickable="true"
@@ -99,35 +63,54 @@
             android:scaleType="centerInside"
             android:src="@drawable/left" />
 
+        <LinearLayout
+            android:id="@+id/fragment_gesture_top_layout"
+            android:layout_width="400dp"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/fragment_gesture_prev"
+            android:background="@color/gray_light"
+            android:clickable="true"
+            android:clipToPadding="false"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/fragment_gesture_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_weight="0"
+                android:gravity="center"
+                android:text="@string/gesture_title"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/fragment_gesture_title_type"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="25sp" />
+        </LinearLayout>
+
         <Button
             android:id="@+id/save_gesutre_button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_toLeftOf="@+id/fragment_gesture_next"
-            android:layout_toRightOf="@+id/fragment_gesture_prev"
+            android:layout_toRightOf="@+id/fragment_gesture_top_layout"
             android:background="@drawable/button_selector_gray"
             android:text="Uložiť gesto"
             android:textColor="#fff"
             android:textSize="25sp" />
-
-        <View
-            android:id="@+id/fragment_gesture_red_highlight"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/fragment_gesture_next"
-            android:layout_toRightOf="@+id/fragment_gesture_prev"
-            android:background="@color/HoloRedDark"
-            android:visibility="invisible" />
 
         <RelativeLayout
             android:id="@+id/fragment_gesture_rate_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_toLeftOf="@+id/fragment_gesture_next"
-            android:layout_toRightOf="@+id/fragment_gesture_prev" >
+            android:layout_toRightOf="@+id/fragment_gesture_top_layout" >
 
             <TextView
                 android:id="@+id/fragment_gesture_rate_title"
@@ -136,7 +119,16 @@
                 android:layout_alignParentTop="true"
                 android:gravity="center"
                 android:text="@string/rate_gesture"
-                android:textSize="16sp" />
+                android:textSize="22sp" />
+
+            <View
+                android:id="@+id/fragment_gesture_red_highlight"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@color/HoloRedDark"
+                android:visibility="invisible" />
 
             <LinearLayout
                 android:id="@+id/fragment_gesture_stars_layout"
@@ -145,45 +137,63 @@
                 android:layout_below="@+id/fragment_gesture_rate_title"
                 android:gravity="center" >
 
+                <TextView
+                    android:id="@+id/stars_none"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical|right"
+                    android:paddingRight="8dp"
+                    android:text="vôbec"
+                    android:textSize="18sp" />
+
                 <ImageButton
                     android:id="@+id/star1"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:background="@drawable/imagebutton_selector"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_action_not_important" />
 
                 <ImageButton
                     android:id="@+id/star2"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:background="@drawable/imagebutton_selector"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_action_not_important" />
 
                 <ImageButton
                     android:id="@+id/star3"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:background="@drawable/imagebutton_selector"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_action_not_important" />
 
                 <ImageButton
                     android:id="@+id/star4"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:background="@drawable/imagebutton_selector"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_action_not_important" />
 
                 <ImageButton
                     android:id="@+id/star5"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:background="@drawable/imagebutton_selector"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_action_not_important" />
+
+                <TextView
+                    android:id="@+id/stars_full"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical|left"
+                    android:paddingLeft="8dp"
+                    android:text="stále"
+                    android:textSize="18sp" />
             </LinearLayout>
         </RelativeLayout>
 

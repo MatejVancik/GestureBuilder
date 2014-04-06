@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     
     
     <uses-sdk
@@ -28,7 +29,7 @@
             </intent-filter>
         </activity>
         
-        <service android:name="com.mv2studio.gesturerecorder.PictureUploadService" />
+        <service android:enabled="true" android:name="com.mv2studio.gesturerecorder.PictureUploadService" />
     </application>
 
 </manifest>

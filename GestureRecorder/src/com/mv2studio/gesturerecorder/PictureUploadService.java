@@ -1,6 +1,8 @@
 package com.mv2studio.gesturerecorder;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -18,8 +20,8 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.gesture.Gesture;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
@@ -32,9 +34,7 @@ public class PictureUploadService extends Service {
 	public static final String GESTURES_TAG = "GESTURES",
 							   ID_TAG = "ID";
 	
-	ArrayList<Gesture> gestures;
 	String id;
-	int items = MainActivity.gestureTasks.length;
 	
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -43,27 +43,56 @@ public class PictureUploadService extends Service {
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		gestures = intent.getParcelableArrayListExtra(GESTURES_TAG);
+		Log.e("", "service started");
 		id = intent.getStringExtra(ID_TAG);
-		
 		new AsyncTask<Void, Void, Void>(){
 			
 			@Override
 			protected Void doInBackground(Void... params) {
-				Log.e("", "id: "+id);
-				Log.e("", "gesuters: "+gestures);
-				for(int i = 0; i < items; i++) {
-					Gesture g = gestures.get(i);
-					if(g == null) continue;
+				boolean showed = false;
+				while(!CommonHelper.isOnline(PictureUploadService.this) && Prefs.getBoolValue(MainActivity.INTERNET_SWITCH, PictureUploadService.this)) {
+					if(!showed) createNotification(PictureUploadService.this, "Čakám na odoslanie dát", "Prosím, pripojte sa k internetu");
+					try {
+						Thread.sleep(3000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				
+				String[] files = new File(PictureUploadService.this.getExternalFilesDir(null).getAbsolutePath()+File.separator+id).list();
+				for(int i = 0; i < files.length; i++) {
+					Bitmap b = null;
+					try {
+						FileInputStream fis = new FileInputStream(new File(PictureUploadService.this.getExternalFilesDir(null).toString()+File.separator+id+File.separator+files[i]));
+						b = BitmapFactory.decodeStream(fis, null, null);
+						fis.close();
+					} catch(Exception e) {
+						e.printStackTrace();
+					}
+					Log.e("", "bitmap "+i+" is "+b);
+					if(b == null) continue;
 					
-					Bitmap bitmap = g.toBitmap(800, 800, 0, getResources().getColor(R.color.HoloRed));
 					ByteArrayOutputStream stream = new ByteArrayOutputStream();
-					bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+					b.compress(Bitmap.CompressFormat.PNG, 100, stream);
 					String image_str = Base64.encodeBytes(stream.toByteArray());
 					
 					ArrayList<NameValuePair> pairs = new ArrayList<NameValuePair>();
 					pairs.add(new BasicNameValuePair("image", image_str));
-					pairs.add(new BasicNameValuePair("ID", MainActivity.gestureTasks[i][1]+id));
+					
+					try {
+						// get 1 from "1-3.png"
+						String name = files[i].split("\\.")[0];
+						String[] split = name.split("-");
+						int type = Integer.valueOf(split[0]);
+						String pairID = MainActivity.gestureTasks[type][1].substring(0, MainActivity.gestureTasks[type][1].length()-1)+"-"+split[1]+"_";
+						Log.e("", "PAIR ID: "+pairID);
+						pairs.add(new BasicNameValuePair("ID", pairID+id));
+					} catch (Exception e ) {
+						
+						pairs.add(new BasicNameValuePair("ID", files[i].split("\\.")[0].split("_")[1]+"_"+id));
+						e.printStackTrace();
+					}
+					
 					
 					try {
 						HttpClient httpClient = new DefaultHttpClient();
@@ -85,8 +114,8 @@ public class PictureUploadService extends Service {
 			}
 			
 			protected void onPostExecute(Void result) {
-				if(!MainActivity.WORLD_EDITION)
-					createNotification(PictureUploadService.this);
+				if(Prefs.getBoolValue(MainActivity.SHOW_SURVEY_TAG, PictureUploadService.this))
+					createNotification(PictureUploadService.this, "Ďakujeme za pomoc.", "Dáta boli odoslané.");
 				try {
 					PictureUploadService.this.stopSelf();
 				} catch (Exception e) {}
@@ -98,12 +127,10 @@ public class PictureUploadService extends Service {
 		return START_NOT_STICKY;
 	}
 	
-	public void createNotification(Context context) {
-		String contentTitle = "Ďakujeme za pomoc.";
-		String contentText =  "Teraz môžete aplikáciu odinštalovať";
+	public void createNotification(Context context, String title, String content) {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-											 .setContentTitle(contentTitle)
-											 .setContentText(contentText)
+											 .setContentTitle(title)
+											 .setContentText(content)
 											 .setVibrate(new long[] {1000})
 											 .setSmallIcon(R.drawable.ic_launcher);
 		

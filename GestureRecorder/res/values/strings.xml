@@ -7,6 +7,12 @@
     
     
     <string name="gesture_title">Nakresli gesto pre</string>
-    <string name="gesture_title_custom">Ak chcete, definujte nové gesto a stlačte tlačidlo +</string>
+    <string name="gesture_title_custom">Nakreslite gesto a potom ho uložte tlačidlom...</string>
 
+    <string name="rate_gesture">Používali by ste toto gesto?</string>
+    <string name="no_internet">Prosím, najprv sa pripojte k internetu</string>
+    <string name="connect_to_net_first">Ak chcete pokračovať, pripojte sa k internetu</string>
+    <string name="require_net">Vynútiť internet</string>
+    <string name="code_sample">Príklad kódu</string>
+    
 </resources>
